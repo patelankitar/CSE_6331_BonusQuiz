@@ -57,29 +57,24 @@ def search():
 
         # YEAR 
         year = request.form['year']
+        selectValue = request.form['yearSelect']
+
+        if(year == ""):
+            errorMessage = "please enter Year value"
+        else:
+            whereQuery = "WHERE " + " year " + selectValue + " "+ year 
+
+        # YEAR - Range 
         yearFrom = request.form['yearFrom']
         yearTo = request.form['yearTo']
-        yearSelectValue = request.form['yearSelect']
-
-        if yearSelectValue == "between":
-            if (yearFrom =="") or (yearTo ==""):
+ 
+        if (yearFrom == "") or (yearTo == ""):
                 errorMessage = "please enter Year values"
-                
-            elif (yearFrom > yearTo):
+        else:    
+            if (yearFrom > yearTo):
                 whereQuery = "WHERE " + " year <=" + yearFrom + " AND year >= " + yearTo
             else: 
                 whereQuery = "WHERE " + " year <=" + yearTo + " AND year >= "+ yearFrom
-        else:
-            if(year==""):
-                errorMessage = "please enter Year value"
-                
-            else:
-                whereQuery = "WHERE " + " year " + selectValue + " "+ value 
-
-        sqlQury = "SELECT  top 6 * FROM [dbo].[presidentialelect] " + whereQuery
-        #cursor.execute(sqlQury)        
-        #data = cursor.fetchall()
-
 
         # State 
         state = request.form['state']
@@ -87,9 +82,6 @@ def search():
             errorMessage = "please enter State value"
         else:
             whereQuery = "WHERE " + " state in (" + state + ") "
-
-        sqlQury = "SELECT  top 6 * FROM [dbo].[presidentialelect] " + whereQuery
-
 
         # Candidate 
         candidate = request.form['candidate']
@@ -99,10 +91,57 @@ def search():
             whereQuery = "WHERE " + " candidate like %" + candidate + "%"
 
         sqlQury = "SELECT  top 6 * FROM [dbo].[presidentialelect] " + whereQuery
+       
+        # Candidate Votes 
+        cVote = request.form['cVote']
+        selectValue = request.form['cVoteSelect']
+
+        if(cVote == ""):
+            errorMessage = "please enter Candidate Votes value"
+        else:
+            whereQuery = "WHERE " + " candidatevotes " + selectValue + " "+ cVote 
+
+
+        # Candidate Votes - Range 
+        cVoteFrom = request.form['cVoteFrom']
+        cVoteTo = request.form['cVoteTo']
+ 
+        if (cVoteFrom == "") or (cVoteTo == ""):
+                errorMessage = "please enter candidatevotes values"
+        else:    
+            if (cVoteFrom > cVoteTo):
+                whereQuery = "WHERE " + " candidatevotes <=" + cVoteFrom + " AND candidatevotes >= " + cVoteTo
+            else: 
+                whereQuery = "WHERE " + " candidatevotes <=" + cVoteTo + " AND candidatevotes >= "+ cVoteFrom
+
+
+        # Total Votes 
+        tVote = request.form['tVote']
+        selectValue = request.form['tVoteSelect']
+
+        if(tVote == ""):
+            errorMessage = "please enter Total Votes value"
+        else:
+            whereQuery = "WHERE " + " totalvotes " + selectValue + " "+ tVote 
+
+        # Total Votes - Range 
+        tVoteFrom = request.form['tVoteFrom']
+        tVoteTo = request.form['tVoteTo']
+ 
+        if (tVoteFrom == "") or (tVoteTo == ""):
+                errorMessage = "please enter totalvotes values"
+        else:    
+            if (tVoteFrom > tVoteTo):
+                whereQuery = "WHERE " + " totalvotes <=" + tVoteFrom + " AND totalvotes >= " + tVoteTo
+            else: 
+                whereQuery = "WHERE " + " totalvotes <=" + tVoteTo + " AND totalvotes >= "+ tVoteFrom
+
+
+        #sqlQury = "SELECT  top 6 * FROM [dbo].[presidentialelect] " + whereQuery
         #cursor.execute(sqlQury)        
         #data = cursor.fetchall()
 
-        return render_template("tableResult.html", data=data, query=query)
+        return render_template("tableResult.html", data=data, query=sqlQury)
 
     else:
         return render_template('search.html')

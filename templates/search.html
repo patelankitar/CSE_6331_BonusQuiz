@@ -2,16 +2,6 @@
 
 {% block scripts %}
 
-<script type="text/javascript">
-    function ShowHideYEARDiv() {
-        var ddlSelect = document.getElementById("yearSelect");
-        var dvRange = document.getElementById("yearRangeDiv");
-        var dvValue = document.getElementById("yearValueDiv");
-        dvRange.style.display = ddlMag.value == "between" ? "block" : "none";
-        dvValue.style.display = ddlMag.value == "between" ? "none" : "block";
-    }
-</script>
-
 {% endblock %}
 
 
@@ -33,23 +23,28 @@
         
         <table>
             <tr>
-                <td style="width: 100px;">
+                <td>
                     Year :  
                 </td>
                 <td>
-                    <select name="yearSelect" id="yearSelect" style="width: 150px;" onchange = "ShowHideYEARDiv()" data-required_elem_id="year"  data-required_if_value ="between">
+                    <select name="yearSelect" id="yearSelect" style="width: 150px;" >
                         <option value="=">=</option>
                         <option value=">">></option>
                         <option value="<"><</option>
                         <option value=">=">>=</option>
                         <option value="<="><=</option>
-                        <option value="between">is in range</option>
                     </select>
                 </td>
                 <td>
-                    <div id="yearValueDiv" style="display: block">
                         <input type="number"  name="year" id="year">
-                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <table>
+            <tr>
+                <td>
+                    Year in range :  
                 </td>
                 <td>
                     <div id="yearRangeDiv" style="display: none">
@@ -66,26 +61,27 @@
                     </div>
                 </td>
             </tr>
+            
         </table>
 
         <table>
             <tr>
-                <td style="width: 100px;">
+                <td>
                     State :  
                 </td>
                 <td>
-                   <input type="text"  name="state" id="state">
+                   <input type="text"  name="state" id="state"> 
                 </td>
-            </tr>
-            <tr>
-                <label style="color: lightgray;">* Add comma sepearetd multiple values e.g. - " AL,TX,AK"</label>
+                <td>
+                    <label style="color: lightgray;">* Add comma sepearetd multiple values e.g. - " AL,TX,AK"</label>
+                </td>
             </tr>
         </table>
 
 
         <table>
             <tr>
-                <td style="width: 100px;">
+                <td>
                     Candidate Name :  
                 </td>
                 <td>
@@ -94,6 +90,87 @@
             </tr>
         </table>
 
+
+        <table>
+            <tr>
+                <td>
+                    Candidate Votes :  
+                </td>
+                <td>
+                    <select name="cVoteSelect" id="cVoteSelect" style="width: 150px;" >
+                        <option value="=">=</option>
+                        <option value=">">></option>
+                        <option value="<"><</option>
+                        <option value=">=">>=</option>
+                        <option value="<="><=</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="number"  name="cVote" id="cVote">
+                </td>
+            </tr>
+        </table>
+
+        <table>
+            <tr>
+                <td style="width: 100px;">
+                    Candidate Votes in range :   
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                From :  <input type="number" name="cVoteFrom" id="cVoteFrom">
+                            </td>
+                            <td>
+                                To :  <input type="number" name="cVoteTo" id="cVoteTo">
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+
+        <table>
+            <tr>
+                <td style="width: 100px;">
+                    Total Votes :  
+                </td>
+                <td>
+                    <select name="tVoteSelect" id="tVoteSelect" style="width: 150px;" >
+                        <option value="=">=</option>
+                        <option value=">">></option>
+                        <option value="<"><</option>
+                        <option value=">=">>=</option>
+                        <option value="<="><=</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="number"  name="tVote" id="tVote">
+                </td>
+            </tr>
+        </table>
+
+        <table>
+            <tr>
+                <td style="width: 100px;">
+                    Total Votes in range :   
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                From :  <input type="number" name="tVoteFrom" id="tVoteFrom">
+                            </td>
+                            <td>
+                                To :  <input type="number" name="tVoteTo" id="tVoteTo">
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
 
         <table>
             <tr>
