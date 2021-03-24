@@ -47,6 +47,41 @@ def index():
     else:
         return render_template('index.html')
 
+@app.route("/search", methods=['POST', 'GET'])
+def search():
+    if request.method == 'POST':
+        year = request.form['year']
+        yearFrom = request.form['yearFrom']
+        yearTo = request.form['yearTo']
+        yearSelectValue = request.form['yearSelect']
+
+        sqlQury = ""
+        whereQuery = ""
+
+        if yearSelectValue == "between":
+            if (yearFrom =="") or (yearTo ==""):
+                errorMessage = "please enter Year values"
+                
+            elif (yearFrom > yearTo):
+                whereQuery = "WHERE " + " year <=" + yearFrom + " AND year >= " + yearTo
+            else: 
+                whereQuery = "WHERE " + " year <=" + yearTo + " AND year >= "+ yearFrom
+        else:
+            if(year==""):
+                errorMessage = "please enter Year value"
+                
+            else:
+                whereQuery = "WHERE " + " year " + selectValue + " "+ value 
+
+        sqlQury = "SELECT  top 6 * FROM [dbo].[presidentialelect] " + whereQuery
+        cursor.execute(sqlQury)        
+        data = cursor.fetchall()
+        return render_template("tableResult.html", data=data)
+
+    else:
+        return render_template('search.html')
+    
+
 @app.route("/q1", methods=['POST', 'GET'])
 def q1():
     if request.method == 'POST':
