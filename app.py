@@ -50,13 +50,16 @@ def index():
 @app.route("/search", methods=['POST', 'GET'])
 def search():
     if request.method == 'POST':
+
+        sqlQury = ""
+        whereQuery = ""
+        data = ""
+
+        # YEAR 
         year = request.form['year']
         yearFrom = request.form['yearFrom']
         yearTo = request.form['yearTo']
         yearSelectValue = request.form['yearSelect']
-
-        sqlQury = ""
-        whereQuery = ""
 
         if yearSelectValue == "between":
             if (yearFrom =="") or (yearTo ==""):
@@ -74,9 +77,32 @@ def search():
                 whereQuery = "WHERE " + " year " + selectValue + " "+ value 
 
         sqlQury = "SELECT  top 6 * FROM [dbo].[presidentialelect] " + whereQuery
-        cursor.execute(sqlQury)        
-        data = cursor.fetchall()
-        return render_template("tableResult.html", data=data)
+        #cursor.execute(sqlQury)        
+        #data = cursor.fetchall()
+
+
+        # State 
+        state = request.form['state']
+        if (state ==""):
+            errorMessage = "please enter State value"
+        else:
+            whereQuery = "WHERE " + " state in (" + state + ") "
+
+        sqlQury = "SELECT  top 6 * FROM [dbo].[presidentialelect] " + whereQuery
+
+
+        # Candidate 
+        candidate = request.form['candidate']
+        if (candidate ==""):
+            errorMessage = "please enter Candidate value"
+        else:
+            whereQuery = "WHERE " + " candidate like %" + candidate + "%"
+
+        sqlQury = "SELECT  top 6 * FROM [dbo].[presidentialelect] " + whereQuery
+        #cursor.execute(sqlQury)        
+        #data = cursor.fetchall()
+
+        return render_template("tableResult.html", data=data, query=query)
 
     else:
         return render_template('search.html')
