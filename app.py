@@ -47,11 +47,228 @@ def index():
     else:
         return render_template('index.html')
 
+@app.route("/q1", methods=['POST', 'GET'])
+def q1():
+    if request.method == 'POST':
+        col1Value  = request.form['col1']
+        col2Value  = request.form['col2']  
+        errormessage = ""
+
+        if (col1Value == "" or col2Value == ""):
+            errormessage = "Please enter valid input"
+            return render_template('q1.html',errorMessage=errormessage)
+        else:
+            #sql = "SELECT party_detailed,  sum(candidatevotes) FROM [dbo].[presidentialelect] where year = "+ col1Value +" and state_po = '"+ col2Value +"'  group by party_detailed"
+            sql = "SELECT  top 6 party_detailed , ROUND(CAST((candidatevotes * 100.0 / totalVotes) AS FLOAT), 2) AS Percentage1   FROM [dbo].[presidentialelect] where year = " + col1Value + " and state_po = '" + col2Value +"' ORDER BY Percentage1 desc "
+            cursor.execute(sql)
+            
+            df = pd.DataFrame.from_records(cursor.fetchall(), columns =list('xy'))
+
+            if(len(df) <= 0):
+                errormessage = "No results found"
+                return render_template('q1.html',errorMessage=errormessage)
+            else:
+                d = [
+                    dict([
+                        (colname, row[i])
+                        for i,colname in enumerate(df.columns)
+                    ])
+                    for row in df.values
+                ]
+
+                # print (json.dumps(d))
+                
+                xAxisLabel = "Candidate"
+                yAxisLabel = "# of Votes"
+                chartLabel = "% Votes for each party"
+        
+                chartType = request.form['chartSelect']
+                print(chartType)
+                #if(chartType=="pi"):
+
+                return render_template('piChart.html', graphData = (json.dumps(d)), xAxisLabel=json.dumps(xAxisLabel),yAxisLabel=json.dumps(yAxisLabel),chartLabel=json.dumps(chartLabel))
+    else:
+        return render_template('q1.html')
+
+
+@app.route("/q2", methods=['POST', 'GET'])
+def q2():
+    if request.method == 'POST':
+        yearStartValue  = request.form['yearStart']
+        yearEndValue  = request.form['yearEnd']  
+        stateValue  = request.form['state']  
+        
+        errormessage = ""
+
+        if (yearStartValue == "" or yearEndValue == "" or stateValue==""):
+            errormessage = "Please enter valid input"
+            return render_template('q2.html',errorMessage=errormessage)
+        else:
+            sql = "SELECT distinct CONVERT(varchar(10), [year]), totalVotes FROM [dbo].[presidentialelect]  where year >= " + yearStartValue + " and year <=  " + yearEndValue + " AND state_po in ('"+stateValue+"')"
+            cursor.execute(sql)
+            
+            df = pd.DataFrame.from_records(cursor.fetchall(), columns =list('xy'))
+
+            if(len(df) <= 0):
+                errormessage = "No results found"
+                return render_template('q2.html',errorMessage=errormessage)
+            else:
+                d = [
+                    dict([
+                        (colname, row[i])
+                        for i,colname in enumerate(df.columns)
+                    ])
+                    for row in df.values
+                ]
+
+                #print (json.dumps(d))
+                
+                xAxisLabel = "Year"
+                yAxisLabel = "Total Votes"
+                chartLabel = "Total Votes per Year"
+        
+                #chartType = request.form['chartSelect']
+                #print(chartType)
+                #if(chartType=="pi"):
+
+                return render_template('scatterChart.html', graphData = (json.dumps(d)), xAxisLabel=json.dumps(xAxisLabel),yAxisLabel=json.dumps(yAxisLabel),chartLabel=json.dumps(chartLabel))
+    else:
+        return render_template('q2.html')
+
+
+@app.route("/q3", methods=['POST', 'GET'])
+def q3():
+    if request.method == 'POST':
+        yearStartValue  = request.form['yearStart']
+        yearEndValue  = request.form['yearEnd']  
+        stateValue  = request.form['state'] 
+
+        errormessage = ""
+
+        if (yearStartValue == "" or yearEndValue == "" or stateValue==""):
+            errormessage = "Please enter valid input"
+            return render_template('q3.html',errorMessage=errormessage)
+        else:
+            sql = "SELECT candidate, CONVERT(varchar(10), [year])  FROM [dbo].[presidentialelect]  where year >= " + yearStartValue + " and year <=  " + yearEndValue + " AND state_po in ('"+stateValue+"') GROUP BY candidate,Year"
+            cursor.execute(sql)
+            
+            df = pd.DataFrame.from_records(cursor.fetchall(), columns =list('xy'))
+
+            if(len(df) <= 0):
+                errormessage = "No results found"
+                return render_template('q3.html',errorMessage=errormessage)
+            else:
+                d = [
+                    dict([
+                        (colname, row[i])
+                        for i,colname in enumerate(df.columns)
+                    ])
+                    for row in df.values
+                ]
+
+                # print (json.dumps(d))
+                
+                xAxisLabel = "Year"
+                yAxisLabel = "Candidate"
+                chartLabel = "Candidate per Year"
+        
+                #chartType = request.form['chartSelect']
+                #print(chartType)
+                #if(chartType=="pi"):
+
+                return render_template('hBarChart.html', graphData = (json.dumps(d)), xAxisLabel=json.dumps(xAxisLabel),yAxisLabel=json.dumps(yAxisLabel),chartLabel=json.dumps(chartLabel))
+    else:
+        return render_template('q3.html')
+
+
+@app.route("/q4", methods=['POST', 'GET'])
+def q4():
+    if request.method == 'POST':
+        col1Value  = request.form['col1']
+        col2Value  = request.form['col2']  
+        errormessage = ""
+
+        if (col1Value == "" or col2Value == ""):
+            errormessage = "Please enter valid input"
+            return render_template('q4.html',errorMessage=errormessage)
+        else:
+            sql = "SELECT party_detailed,  sum(candidatevotes) FROM [dbo].[presidentialelect] where year = "+ col1Value +" and state_po = '"+ col2Value +"'  group by party_detailed"
+            cursor.execute(sql)
+            
+            df = pd.DataFrame.from_records(cursor.fetchall(), columns =list('xy'))
+
+            if(len(df) <= 0):
+                errormessage = "No results found"
+                return render_template('q4.html',errorMessage=errormessage)
+            else:
+                d = [
+                    dict([
+                        (colname, row[i])
+                        for i,colname in enumerate(df.columns)
+                    ])
+                    for row in df.values
+                ]
+
+                # print (json.dumps(d))
+                
+                xAxisLabel = "Candidate"
+                yAxisLabel = "# of Votes"
+                chartLabel = "Number of Votes per Candidate"
+        
+                #chartType = request.form['chartSelect']
+                #print(chartType)
+                #if(chartType=="pi"):
+
+                return render_template('barChart.html', graphData = (json.dumps(d)), xAxisLabel=json.dumps(xAxisLabel),yAxisLabel=json.dumps(yAxisLabel),chartLabel=json.dumps(chartLabel))
+    else:
+        return render_template('q4.html')
+
+
+@app.route("/q5", methods=['POST', 'GET'])
+def q5():
+    if request.method == 'POST':
+        col1Value  = request.form['col1']
+        col2Value  = request.form['col2']  
+        errormessage = ""
+
+        if (col1Value == "" or col2Value == ""):
+            errormessage = "Please enter valid input"
+            return render_template('q5.html',errorMessage=errormessage)
+        else:
+            sql = "SELECT  party_simplified,  ROUND(CAST((sum(candidatevotes) * 100.0 / totalVotes) AS FLOAT), 2) AS [Percentage] FROM [dbo].[presidentialelect] WHERE year = " + col1Value + " AND state_po in ('" + col2Value + "') GROUP by party_simplified ,totalVotes"
+            cursor.execute(sql)
+            
+            df = pd.DataFrame.from_records(cursor.fetchall(), columns =list('xy'))
+
+            if(len(df) <= 0):
+                errormessage = "No results found"
+                return render_template('q5.html',errorMessage=errormessage)
+            else:
+                d = [
+                    dict([
+                        (colname, row[i])
+                        for i,colname in enumerate(df.columns)
+                    ])
+                    for row in df.values
+                ]
+
+                # print (json.dumps(d))
+                
+                xAxisLabel = "Candidate"
+                yAxisLabel = "# of Votes"
+                chartLabel = "Number of Votes per Candidate"
+        
+                #chartType = request.form['chartSelect']
+                #print(chartType)
+                #if(chartType=="pi"):
+                
+                return render_template('piChart.html', graphData = (json.dumps(d)), xAxisLabel=json.dumps(xAxisLabel),yAxisLabel=json.dumps(yAxisLabel),chartLabel=json.dumps(chartLabel))
+    else:
+        return render_template('q5.html')
+
+
 @app.route("/barChart", methods=['POST', 'GET'])
 def barChart():
-    if request.method == 'POST':
-        return "This is index post method!"
-    else:
         # cursor.execute("select locationSource, count(mag) as mag_count  from [dbo].[earthquakeMonthData] where mag > 4.1 and mag < 4.3 group by locationSource ")
         # df = pd.DataFrame.from_records(cursor.fetchall(), columns =list('xy'))
         # d = [
@@ -64,17 +281,15 @@ def barChart():
         # print (json.dumps(d))
 
         #d= [{"x": "ak", "y": 2}, {"x": "nc", "y": 1}, {"x": "ok", "y": 1}, {"x": "pr", "y": 1}, {"x": "us", "y": 90}]
-        d= [{"x": 4.18, "y": 1.0}, {"x": 4.2, "y": 2.0}, {"x": 4.3, "y": 3.0}, {"x": 4.32, "y": 3.0}, {"x": 4.34, "y": 1.0}, {"x": 4.38, "y": 5.0}, {"x": 4.39, "y": 1.0}, {"x": 4.4, "y": 10.0}, {"x": 4.5, "y": 8.0}, {"x": 4.6, "y": 7.0}, {"x": 4.7, "y": 3.0}, {"x": 4.8, "y": 7.0}, {"x": 4.9, "y": 6.0}, {"x": 4.99, "y": 1.0}]
-        xAxisLabel = "Magnitude"
-        yAxisLabel = "# of earthquake"
-        chartLabel = "I changed this text to Test"
-        return render_template('barChart.html', graphData = (json.dumps(d)), xAxisLabel=json.dumps(xAxisLabel),yAxisLabel=json.dumps(yAxisLabel),chartLabel=json.dumps(chartLabel))
+        # d= [{"x": 4.18, "y": 1.0}, {"x": 4.2, "y": 2.0}, {"x": 4.3, "y": 3.0}, {"x": 4.32, "y": 3.0}, {"x": 4.34, "y": 1.0}, {"x": 4.38, "y": 5.0}, {"x": 4.39, "y": 1.0}, {"x": 4.4, "y": 10.0}, {"x": 4.5, "y": 8.0}, {"x": 4.6, "y": 7.0}, {"x": 4.7, "y": 3.0}, {"x": 4.8, "y": 7.0}, {"x": 4.9, "y": 6.0}, {"x": 4.99, "y": 1.0}]
+        # xAxisLabel = "Magnitude"
+        # yAxisLabel = "# of earthquake"
+        # chartLabel = "I changed this text to Test"
+        # return render_template('barChart.html', graphData = (json.dumps(d)), xAxisLabel=json.dumps(xAxisLabel),yAxisLabel=json.dumps(yAxisLabel),chartLabel=json.dumps(chartLabel))
+        return render_template('barChart.html')
 
 @app.route("/hBarChart", methods=['POST', 'GET'])
 def hBarChart():
-    if request.method == 'POST':
-        return "This is index post method!"
-    else:
         # cursor.execute("select locationSource, count(mag) as mag_count  from [dbo].[earthquakeMonthData] where mag > 4.1 and mag < 4.3 group by locationSource ")
         # df = pd.DataFrame.from_records(cursor.fetchall(), columns =list('xy'))
         # d = [
@@ -86,12 +301,12 @@ def hBarChart():
         # ]
         # print (json.dumps(d))
 
-        d= [{"x": 4.18, "y": 1.0}, {"x": 4.2, "y": 2.0}, {"x": 4.3, "y": 3.0}, {"x": 4.32, "y": 3.0}, {"x": 4.34, "y": 1.0}, {"x": 4.38, "y": 5.0}, {"x": 4.39, "y": 1.0}, {"x": 4.4, "y": 10.0}, {"x": 4.5, "y": 8.0}, {"x": 4.6, "y": 7.0}, {"x": 4.7, "y": 3.0}, {"x": 4.8, "y": 7.0}, {"x": 4.9, "y": 6.0}, {"x": 4.99, "y": 1.0}]
-        xAxisLabel = "Number of earthquake"
-        yAxisLabel = "Magnitude"
-        chartLabel = "Number of Earthquake for magnitude"
-        return render_template('hBarChart.html', graphData = (json.dumps(d)), xAxisLabel=json.dumps(xAxisLabel),yAxisLabel=json.dumps(yAxisLabel),chartLabel=json.dumps(chartLabel))
-
+        # d= [{"x": 4.18, "y": 1.0}, {"x": 4.2, "y": 2.0}, {"x": 4.3, "y": 3.0}, {"x": 4.32, "y": 3.0}, {"x": 4.34, "y": 1.0}, {"x": 4.38, "y": 5.0}, {"x": 4.39, "y": 1.0}, {"x": 4.4, "y": 10.0}, {"x": 4.5, "y": 8.0}, {"x": 4.6, "y": 7.0}, {"x": 4.7, "y": 3.0}, {"x": 4.8, "y": 7.0}, {"x": 4.9, "y": 6.0}, {"x": 4.99, "y": 1.0}]
+        # xAxisLabel = "Number of earthquake"
+        # yAxisLabel = "Magnitude"
+        # chartLabel = "Number of Earthquake for magnitude"
+        # return render_template('hBarChart.html', graphData = (json.dumps(d)), xAxisLabel=json.dumps(xAxisLabel),yAxisLabel=json.dumps(yAxisLabel),chartLabel=json.dumps(chartLabel))
+        return render_template('hBarChart.html')
   
 
 @app.route("/piChart", methods=['POST', 'GET'])
@@ -108,14 +323,14 @@ def piChart():
         # print(dict_data)
         # chart_data = dict_data
         
-        chartLabel = "Number of Earthquake for magnitude"
+        #chartLabel = "Number of Earthquake for magnitude"
         
         #chart_data = {4.18: 100.0, 4.2: 94.0, 4.3: 106.0, 4.34: 102.0}
         #return render_template("piChart.html", graphData = chart_data, chartLabel=json.dumps(chartLabel))
 
-        d= [{"x": "AL", "y": "46"}, {"x": "OK", "y": "10"}, {"x": "TX", "y": "70"}, {"x": "PA", "y": "50"}]
-        return render_template('piChart.html', graphData = (json.dumps(d)),chartLabel=json.dumps(chartLabel))
-
+        #d= [{"x": "AL", "y": "46"}, {"x": "OK", "y": "10"}, {"x": "TX", "y": "70"}, {"x": "PA", "y": "50"}]
+        #return render_template('piChart.html', graphData = (json.dumps(d)),chartLabel=json.dumps(chartLabel))
+        return render_template('piChart.html')
         
 @app.route("/lineChart", methods=['POST', 'GET'])
 def lineChart():
@@ -130,12 +345,12 @@ def lineChart():
         # ]
         # print (json.dumps(d))
 
-        d= [{"x": 4.18, "y": 1.0}, {"x": 4.2, "y": 2.0}, {"x": 4.3, "y": 3.0}, {"x": 4.32, "y": 3.0}, {"x": 4.34, "y": 1.0}, {"x": 4.38, "y": 5.0}, {"x": 4.39, "y": 1.0}, {"x": 4.4, "y": 10.0}, {"x": 4.5, "y": 8.0}, {"x": 4.6, "y": 7.0}, {"x": 4.7, "y": 3.0}, {"x": 4.8, "y": 7.0}, {"x": 4.9, "y": 6.0}, {"x": 4.99, "y": 1.0}]
-        xAxisLabel = "Magnitude"
-        yAxisLabel = "# of earthquake"
-        chartLabel = "Number of Earthquake for magnitude"
-        return render_template('lineChart.html', graphData = (json.dumps(d)), xAxisLabel=json.dumps(xAxisLabel),yAxisLabel=json.dumps(yAxisLabel),chartLabel=json.dumps(chartLabel))
-
+        # d= [{"x": 4.18, "y": 1.0}, {"x": 4.2, "y": 2.0}, {"x": 4.3, "y": 3.0}, {"x": 4.32, "y": 3.0}, {"x": 4.34, "y": 1.0}, {"x": 4.38, "y": 5.0}, {"x": 4.39, "y": 1.0}, {"x": 4.4, "y": 10.0}, {"x": 4.5, "y": 8.0}, {"x": 4.6, "y": 7.0}, {"x": 4.7, "y": 3.0}, {"x": 4.8, "y": 7.0}, {"x": 4.9, "y": 6.0}, {"x": 4.99, "y": 1.0}]
+        # xAxisLabel = "Magnitude"
+        # yAxisLabel = "# of earthquake"
+        # chartLabel = "Number of Earthquake for magnitude"
+        # return render_template('lineChart.html', graphData = (json.dumps(d)), xAxisLabel=json.dumps(xAxisLabel),yAxisLabel=json.dumps(yAxisLabel),chartLabel=json.dumps(chartLabel))
+        return render_template('lineChart.html')
 
 @app.route("/scatterChart", methods=['POST', 'GET'])
 def scatterChart():
@@ -150,12 +365,12 @@ def scatterChart():
         # ]
         # print (json.dumps(d))
 
-        d= [{"x": 4.18, "y": 1.0}, {"x": 4.2, "y": 2.0}, {"x": 4.3, "y": 3.0}, {"x": 4.32, "y": 3.0}, {"x": 4.34, "y": 1.0}, {"x": 4.38, "y": 5.0}, {"x": 4.39, "y": 1.0}, {"x": 4.4, "y": 10.0}, {"x": 4.5, "y": 8.0}, {"x": 4.6, "y": 7.0}, {"x": 4.7, "y": 3.0}, {"x": 4.8, "y": 7.0}, {"x": 4.9, "y": 6.0}, {"x": 4.99, "y": 1.0}]
-        xAxisLabel = "Magnitude"
-        yAxisLabel = "# of earthquake"
-        chartLabel = "Number of Earthquake for magnitude"
-        return render_template('scatterChart.html', graphData = (json.dumps(d)), xAxisLabel=json.dumps(xAxisLabel),yAxisLabel=json.dumps(yAxisLabel),chartLabel=json.dumps(chartLabel))
-
+        # d= [{"x": 4.18, "y": 1.0}, {"x": 4.2, "y": 2.0}, {"x": 4.3, "y": 3.0}, {"x": 4.32, "y": 3.0}, {"x": 4.34, "y": 1.0}, {"x": 4.38, "y": 5.0}, {"x": 4.39, "y": 1.0}, {"x": 4.4, "y": 10.0}, {"x": 4.5, "y": 8.0}, {"x": 4.6, "y": 7.0}, {"x": 4.7, "y": 3.0}, {"x": 4.8, "y": 7.0}, {"x": 4.9, "y": 6.0}, {"x": 4.99, "y": 1.0}]
+        # xAxisLabel = "Magnitude"
+        # yAxisLabel = "# of earthquake"
+        # chartLabel = "Number of Earthquake for magnitude"
+        # return render_template('scatterChart.html', graphData = (json.dumps(d)), xAxisLabel=json.dumps(xAxisLabel),yAxisLabel=json.dumps(yAxisLabel),chartLabel=json.dumps(chartLabel))
+        return render_template('scatterChart.html')
 
 
 # Get Filter criteria 

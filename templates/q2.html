@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+
+{% endblock %}
+
+
+{% block title %} Quiz3-Q2   {% endblock %}
+
+{% block content %}
+    <h1>Quiz3-Q2</h1>
+
+    <form id="q2" action="/q2" method="POST">
+        <table>
+            <tr>
+                <td>
+                    <label style="color: red;">{{ errorMessage }}</label>
+
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td>
+                    Enter ----- Year - Start  : 
+                </td>
+                <td>
+                    <input type="number" name="yearStart" id="yearStart">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Enter ----- Year - End  : 
+                </td>
+                <td>
+                    <input type="number" name="yearEnd" id="yearEnd">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Enter ----- (State) : 
+                </td>
+                <td>
+                    <input type="text" name="state" id="state">
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 180px;">
+                    Select Chart Type  : 
+                 </td>
+                 <td style="width: 250px;">
+                     <select name="chartSelect" id="chartSelect" style="width: 200px;">
+                        <option value="point">Scattered (Point) Chart</option>
+                         <!-- <option value="line">Line Chart</option>
+                         <option value="hBar">Horizontal Bar Chart</option>
+                         <option value="vBar">Vertical Bar  Chart</option>
+                         <option value="point">Scattered (Point) Chart</option> -->
+                     </select>
+                 </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" name="search" id="search" value="Submit">
+                </td>
+            </tr>
+        </table>
+{% endblock %}
