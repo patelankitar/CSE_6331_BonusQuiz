@@ -201,7 +201,7 @@ def q1():
         cursor.execute(sqlQury)        
         total = cursor.fetchall()
 
-        if(errorMessage == "")
+        if(errorMessage == ""):
             return render_template("tableResult.html", data=data, query=sqlQury,message1=message1,message2=message2,total=str(total) )
         else:
             return render_template('q1.html',errorMessage=errorMessage)
@@ -212,44 +212,63 @@ def q1():
 @app.route("/q2", methods=['POST', 'GET'])
 def q2():
     if request.method == 'POST':
-        yearStartValue  = request.form['yearStart']
-        yearEndValue  = request.form['yearEnd']  
-        stateValue  = request.form['state']  
+        sqlQury = ""
+        whereQuery = ""
+        data = ""
         
-        errormessage = ""
+        # YEAR - Range 
+        yearFrom = request.form['yearFrom']
+        yearTo = request.form['yearTo']
+ 
+        if (yearFrom == "") or (yearTo == ""):
+            errorMessage = "please enter Year values"
+        else:    
+            if (yearFrom > yearTo):
+                whereQuery = "WHERE " + " year <= " + yearFrom + " AND year >= " + yearTo
+            else: 
+                whereQuery = "WHERE " + " year <= " + yearTo + " AND year >= "+ yearFrom
 
-        if (yearStartValue == "" or yearEndValue == "" or stateValue==""):
-            errormessage = "Please enter valid input"
+        # Total Votes - Range 
+        tVoteFrom = request.form['tVoteFrom']
+        tVoteTo = request.form['tVoteTo']
+ 
+        if (tVoteFrom == "") or (tVoteTo == ""):
+                errorMessage = "please enter totalvotes values"
+        else:    
+            if (tVoteFrom > tVoteTo):
+                whereQuery = whereQuery + " AND " + " candidatevotes <=" + tVoteFrom + " AND totalvotes >= " + tVoteTo
+            else: 
+                whereQuery = whereQuery + " AND " + " candidatevotes <=" + tVoteTo + " AND totalvotes >= "+ tVoteFrom
+
+        sqlQury = "SELECT SUBSTRING(candidate, 0, 2), sum(candidatevotes) FROM [dbo].[presidentialelect] " + whereQuery + " group by candidate "
+        cursor.execute(sqlQury)
+            
+        df = pd.DataFrame.from_records(cursor.fetchall(), columns =list('xy'))
+
+        if(len(df) <= 0):
+            errormessage = "No results found"
             return render_template('q2.html',errorMessage=errormessage)
         else:
-            sql = "SELECT distinct CONVERT(varchar(10), [year]), totalVotes FROM [dbo].[presidentialelect]  where year >= " + yearStartValue + " and year <=  " + yearEndValue + " AND state_po in ('"+stateValue+"')"
-            cursor.execute(sql)
-            
-            df = pd.DataFrame.from_records(cursor.fetchall(), columns =list('xy'))
+            d = [
+                dict([
+                    (colname, row[i])
+                    for i,colname in enumerate(df.columns)
+                ])
+                for row in df.values
+            ]
 
-            if(len(df) <= 0):
-                errormessage = "No results found"
-                return render_template('q2.html',errorMessage=errormessage)
-            else:
-                d = [
-                    dict([
-                        (colname, row[i])
-                        for i,colname in enumerate(df.columns)
-                    ])
-                    for row in df.values
-                ]
-
-                #print (json.dumps(d))
-                
-                xAxisLabel = "Year"
-                yAxisLabel = "Total Votes"
-                chartLabel = "Total Votes per Year"
+        print (json.dumps(d))
         
-                #chartType = request.form['chartSelect']
-                #print(chartType)
-                #if(chartType=="pi"):
+        xAxisLabel = "Candidate"
+        yAxisLabel = "Total Votes"
+        chartLabel = "Total Votes per Candidate"
 
-                return render_template('scatterChart.html', graphData = (json.dumps(d)), xAxisLabel=json.dumps(xAxisLabel),yAxisLabel=json.dumps(yAxisLabel),chartLabel=json.dumps(chartLabel))
+        #chartType = request.form['chartSelect']
+        #print(chartType)
+        #if(chartType=="pi"):
+
+        return render_template('hBarChart.html', graphData = (json.dumps(d)), xAxisLabel=json.dumps(xAxisLabel),yAxisLabel=json.dumps(yAxisLabel),chartLabel=json.dumps(chartLabel))
+  
     else:
         return render_template('q2.html')
 
