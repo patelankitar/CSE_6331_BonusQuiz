@@ -8,7 +8,7 @@
 {% block title %} Quiz3-Q2   {% endblock %}
 
 {% block content %}
-    <h1>Quiz3-Q2</h1>
+    <h1>Quiz3-Q 12</h1>
 
     <form id="q2" action="/q2" method="POST">
         <table>
@@ -22,45 +22,40 @@
         <table>
             <tr>
                 <td>
-                    Enter ----- Year - Start  : 
+                    Year in range :  
                 </td>
                 <td>
-                    <input type="number" name="yearStart" id="yearStart">
+                  
+                        <table>
+                            <tr>
+                                <td>
+                                    From :  <input type="number" name="yearFrom" id="yearFrom">
+                                </td>
+                                <td>
+                                    To :  <input type="number" name="yearTo" id="yearTo">
+                                </td>
+                            </tr>
+                        </table>
+                   
                 </td>
             </tr>
+        </table>
+        <table>
             <tr>
-                <td>
-                    Enter ----- Year - End  : 
+                <td style="width: 100px;">
+                    Total Votes in range :   
                 </td>
                 <td>
-                    <input type="number" name="yearEnd" id="yearEnd">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Enter ----- (State) : 
-                </td>
-                <td>
-                    <input type="text" name="state" id="state">
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 180px;">
-                    Select Chart Type  : 
-                 </td>
-                 <td style="width: 250px;">
-                     <select name="chartSelect" id="chartSelect" style="width: 200px;">
-                        <option value="point">Scattered (Point) Chart</option>
-                         <!-- <option value="line">Line Chart</option>
-                         <option value="hBar">Horizontal Bar Chart</option>
-                         <option value="vBar">Vertical Bar  Chart</option>
-                         <option value="point">Scattered (Point) Chart</option> -->
-                     </select>
-                 </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="submit" name="search" id="search" value="Submit">
+                    <table>
+                        <tr>
+                            <td>
+                                From :  <input type="number" name="tVoteFrom" id="tVoteFrom">
+                            </td>
+                            <td>
+                                To :  <input type="number" name="tVoteTo" id="tVoteTo">
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </table>

@@ -201,7 +201,10 @@ def q1():
         cursor.execute(sqlQury)        
         total = cursor.fetchall()
 
-        return render_template("tableResult.html", data=data, query=sqlQury,message1=message1,message2=message2,total=str(total) )
+        if(errorMessage == "")
+            return render_template("tableResult.html", data=data, query=sqlQury,message1=message1,message2=message2,total=str(total) )
+        else:
+            return render_template('q1.html',errorMessage=errorMessage)
     else:
         return render_template('q1.html')
 
