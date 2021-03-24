@@ -257,7 +257,7 @@ def q2():
                 for row in df.values
             ]
 
-        print (json.dumps(d))
+        #print (json.dumps(d))
         
         xAxisLabel = "Candidate"
         yAxisLabel = "Total Votes"
