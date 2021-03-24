@@ -154,7 +154,7 @@ def q1():
         sqlQury = ""
         whereQuery = ""
         data = ""
-        
+        errorMessage = ""
         # YEAR - Range 
         yearFrom = request.form['yearFrom']
         yearTo = request.form['yearTo']
@@ -216,6 +216,7 @@ def q2():
         sqlQury = ""
         whereQuery = ""
         data = ""
+        errorMessage = ""
         
         # YEAR - Range 
         yearFrom = request.form['yearFrom']
