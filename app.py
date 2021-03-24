@@ -176,7 +176,7 @@ def q1():
         print(whereQuery)
         startTime2 = time.time()
         
-        sqlQury = "SELECT  top 6 * FROM [dbo].[presidentialelect] " + whereQuery
+        sqlQury = "SELECT * FROM [dbo].[presidentialelect] " + whereQuery
         cursor.execute(sqlQury)        
         data = cursor.fetchall()
         
@@ -185,7 +185,23 @@ def q1():
         message1 = endTime2 - startTime2
         print(sqlQury)
 
-        return render_template("tableResult.html", data=data, query=sqlQury,message1=message1)
+
+        startTime1 = time.time()
+        
+        sqlQury = "SELECT * FROM [dbo].[presidentialelect] " + whereQuery
+        cursor.execute(sqlQury)        
+        data = cursor.fetchall()
+        
+        endTime1 = time.time()
+
+        message2 = endTime1 - startTime1
+        print(sqlQury)
+
+        sqlQury = "SELECT sum(candidatevotes) FROM [dbo].[presidentialelect] " + whereQuery
+        cursor.execute(sqlQury)        
+        total = cursor.fetchall()
+
+        return render_template("tableResult.html", data=data, query=sqlQury,message1=message1,message2=message2,total=str(total) )
     else:
         return render_template('q1.html')
 

@@ -3,6 +3,19 @@
 {% block title %} All records   {% endblock %}
 
 {% block content %}
+
+<table>
+    <tr>
+        <td>
+            <label style="color: green;"> Time taken to execute Query for total votes in SQL  = {{ message2 }} seconds </label>
+        </td>
+
+        <td>
+            <label style="color: black;"> Total of Candidate Votes for Given search criteria  = {{ total }}  </label>
+        </td>
+    </tr>
+</table>
+
     <h1> All records :   </h1>
     <table>
         <tr>
