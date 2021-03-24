@@ -4,43 +4,43 @@
 
 {% block content %}
     <h1> All records :   </h1>
-    <!-- <table>
+    <table>
         <tr>
             <td>
                 <label style="color: blue;"> Time taken to execute Query in SQL  = {{ message1 }} seconds </label>
 
             </td>
         </tr>
-        <tr>
+        <!-- <tr>
             <td>
                 <label style="color: green;">Time taken to execute Query with Cache  = {{ message2 }} seconds</label>
             </td>
-        </tr>
-    </table> -->
+        </tr> -->
+    </table>
 
-    <label style="color: blue;"> {{ query }}  </label>
+    <!-- <label style="color: blue;"> {{ query }}  </label> -->
 
     <table class="tableClass">
         <thead>
             <tr>
-                <td style="width: auto;">Year</td>
-                <td style="width: auto;">State</td>
-                <td style="width: auto;">Candidate Name</td>
-                <td style="width: auto;">Party</td>
-                <td style="width: auto;">Candidate Votes</td>
-                <td style="width: auto;">Total Votes</td>
+                <td style="width: 200px;">Candidate Name</td>
+                <td style="width: 200px;">Year</td>
+                <td style="width: 200px;">Party</td>
+                <td style="width: 200px;">State</td>
+                <td style="width: 200px;">Candidate Votes</td>
+                <!-- <td style="width: auto;">Total Votes</td> -->
                 
             </tr>
         </thead>
         <tbody>
             {% for row in data %}
             <tr>
-                <td style="width: auto;"> {{ row.year }}</td>
-                <td style="width: auto;"> {{ row.state }}</td>
-                <td style="width: auto;"> {{ row.candidate }}</td>
-                <td style="width: auto;"> {{ row.party_detailed }}</td>
-                <td style="width: auto;"> {{ row.candidatevotes }}</td>
-                <td style="width: auto;"> {{ row.totalvotes }}</td>
+                <td style="width: 200px;"> {{ row.candidate }}</td>
+                <td style="width: 200px;"> {{ row.year }}</td>
+                <td style="width: 200px;"> {{ row.party_detailed }}</td>
+                <td style="width: 200px;"> {{ row.state }}</td>
+                <td style="width: 200px;"> {{ row.candidatevotes }}</td>
+                <!-- <td style="width: auto;"> {{ row.totalvotes }}</td> -->
                
             </tr>
             {% endfor%}

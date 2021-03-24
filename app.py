@@ -88,7 +88,7 @@ def search():
         if (candidate ==""):
             errorMessage = "please enter Candidate value"
         else:
-            whereQuery = "WHERE " + " candidate like %" + candidate + "%"
+            whereQuery = "WHERE " + " candidate like '%" + candidate + "%'"
 
         sqlQury = "SELECT  top 6 * FROM [dbo].[presidentialelect] " + whereQuery
        
@@ -150,43 +150,42 @@ def search():
 @app.route("/q1", methods=['POST', 'GET'])
 def q1():
     if request.method == 'POST':
-        col1Value  = request.form['col1']
-        col2Value  = request.form['col2']  
-        errormessage = ""
-
-        if (col1Value == "" or col2Value == ""):
-            errormessage = "Please enter valid input"
-            return render_template('q1.html',errorMessage=errormessage)
-        else:
-            #sql = "SELECT party_detailed,  sum(candidatevotes) FROM [dbo].[presidentialelect] where year = "+ col1Value +" and state_po = '"+ col2Value +"'  group by party_detailed"
-            sql = "SELECT  top 6 party_detailed , ROUND(CAST((candidatevotes * 100.0 / totalVotes) AS FLOAT), 2) AS Percentage1   FROM [dbo].[presidentialelect] where year = " + col1Value + " and state_po = '" + col2Value +"' ORDER BY Percentage1 desc "
-            cursor.execute(sql)
-            
-            df = pd.DataFrame.from_records(cursor.fetchall(), columns =list('xy'))
-
-            if(len(df) <= 0):
-                errormessage = "No results found"
-                return render_template('q1.html',errorMessage=errormessage)
-            else:
-                d = [
-                    dict([
-                        (colname, row[i])
-                        for i,colname in enumerate(df.columns)
-                    ])
-                    for row in df.values
-                ]
-
-                # print (json.dumps(d))
-                
-                xAxisLabel = "Candidate"
-                yAxisLabel = "# of Votes"
-                chartLabel = "% Votes for each party"
+        sqlQury = ""
+        whereQuery = ""
+        data = ""
         
-                chartType = request.form['chartSelect']
-                print(chartType)
-                #if(chartType=="pi"):
+        # YEAR - Range 
+        yearFrom = request.form['yearFrom']
+        yearTo = request.form['yearTo']
+ 
+        if (yearFrom == "") or (yearTo == ""):
+            errorMessage = "please enter Year values"
+        else:    
+            if (yearFrom > yearTo):
+                whereQuery = "WHERE " + " year <= " + yearFrom + " AND year >= " + yearTo
+            else: 
+                whereQuery = "WHERE " + " year <= " + yearTo + " AND year >= "+ yearFrom
+        
+        # Candidate 
+        candidate = request.form['candidate']
+        if (candidate ==""):
+            errorMessage = errorMessage + "please enter Candidate value"
+        else:
+            whereQuery = whereQuery + " AND " + " candidate like '%" + candidate + "%'"
+        
+        print(whereQuery)
+        startTime2 = time.time()
+        
+        sqlQury = "SELECT  top 6 * FROM [dbo].[presidentialelect] " + whereQuery
+        cursor.execute(sqlQury)        
+        data = cursor.fetchall()
+        
+        endTime2 = time.time()
 
-                return render_template('piChart.html', graphData = (json.dumps(d)), xAxisLabel=json.dumps(xAxisLabel),yAxisLabel=json.dumps(yAxisLabel),chartLabel=json.dumps(chartLabel))
+        message1 = endTime2 - startTime2
+        print(sqlQury)
+
+        return render_template("tableResult.html", data=data, query=sqlQury,message1=message1)
     else:
         return render_template('q1.html')
 
