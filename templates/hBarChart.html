@@ -14,12 +14,12 @@
         
         .tick text {
             font-family: sans-serif;
-            font-size: 13px;
+            font-size: 10px;
         }
 
         .axisLabel {
             font-family: Verdana, sans-serif;
-            font-size: 16px; 
+            font-size: 6px; 
             text-anchor: middle;
             fill: green;
             
@@ -38,7 +38,7 @@
 {% block content %}
  
     <div id="barchartDiv"></div>
-    <svg width="1100" height="700"></svg>
+    <svg width="1100" height="900"></svg>
     
 
     <script>
@@ -50,7 +50,7 @@
         var svg = d3.select("svg"),
             margin = 200,
             width = 1100 - margin,
-            height = 500 - margin;
+            height = 900 - margin;
 
         svg.append("text")
         .attr("transform", "translate(100,0)")
@@ -87,9 +87,8 @@
         .call(d3.axisLeft(yScale).tickFormat(function(d){return d; })
         .ticks(10))
         .append("text")
-        .attr("transform", "rotate(-45)")
-        .attr("x", height - 200)
-        .attr("dy", "-20.1em")
+        //.attr("x", height - 200)
+        .attr("dy", "-200.1em")
         .attr("class", "axisLabel")
         .text(yLabel);
 

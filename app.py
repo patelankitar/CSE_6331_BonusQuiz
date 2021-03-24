@@ -54,6 +54,7 @@ def search():
         sqlQury = ""
         whereQuery = ""
         data = ""
+        errorMessage = ""
 
         # YEAR 
         year = request.form['year']
